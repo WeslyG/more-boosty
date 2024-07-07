@@ -39,7 +39,7 @@ export const parseVideoId = (url) => {
     return url.searchParams.get('id')
   }
 
-  if (url.hostname.includes('images.boosty.to')) {
+  if (url.hostname.match(/images(\d+)?.boosty.to/)) {
     return url.pathname.split('/').reverse()[0]
   }
 }
