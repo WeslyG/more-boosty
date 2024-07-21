@@ -2,9 +2,6 @@
 
 > **More Boosty** - это браузерное расширение, улучшающее интерфейс и функции краудфандинговой платформы [Boosty](https://boosty.to) (Бусти)
 
-## [--> Поддержать проект через VK Donut <--](https://vk.com/donut/iamcjmaxik?ref=more_boosty)
-
-[README in English](./README-EN.md)
 
 # Возможности
 
