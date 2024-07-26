@@ -2,8 +2,6 @@
 
 > **More Boosty** - это браузерное расширение, улучшающее интерфейс и функции краудфандинговой платформы [Boosty](https://boosty.to) (Бусти)
 
-## [--> Поддержать проект через VK Donut <--](https://vk.com/donut/iamcjmaxik?ref=more_boosty)
-
 [README in English](./README-EN.md)
 
 # Возможности
@@ -35,17 +33,9 @@
 2. Для частичной поддержки потребуется сильно изменить рабочий процесс.
 3. Нет спроса на версию для Firefox.
 
-## Благодарности
-
-* [fregante](https://github.com/fregante)
-
-* Бусти-чат [StopGame.ru](https://boosty.to/stopgame)
-
 ---
 
 # Для разработчиков
-
-[![Свежий релиз](https://img.shields.io/github/v/release/cjmaxik/more-boosty?label=%D1%81%D0%B2%D0%B5%D0%B6%D0%B8%D0%B9%20%D1%80%D0%B5%D0%BB%D0%B8%D0%B7&logo=github&style=for-the-badge)][2]
 
 ## Особенности официальной сборки
 
@@ -55,7 +45,7 @@
 
 ## Сборка расширения вручную
 
-1. Скачай [свежий релиз](https://github.com/cjmaxik/more-boosty/releases) либо весь репозиторий
+1. Скачай [свежий релиз](https://github.com/weslyg/more-boosty/releases) либо весь репозиторий
 2. Установи Node.js (нужная версия - в [package.json](./package.json))
 3. Установи все зависимости
 
@@ -95,4 +85,4 @@ npm run watch
 * Ассеты (changelog, иконки) требуют ручного обновления расширения
 
 [1]: https://chrome.google.com/webstore/detail/more-boosty/kpcbalinpdhnlgonfoflhflnfgcbffbl
-[2]: https://github.com/cjmaxik/more-boosty/releases
+[2]: https://github.com/WeslyG/more-boosty
