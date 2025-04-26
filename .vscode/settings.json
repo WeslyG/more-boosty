@@ -1,6 +1,5 @@
 {
   "files.exclude": {
-    "**/distribution": true,
     "**/.parcel-cache": true
   },
   "standard.autoFixOnSave": true,

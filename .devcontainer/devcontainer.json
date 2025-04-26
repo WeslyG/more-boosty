@@ -1,0 +1,10 @@
+{
+  "name": "NodeJS 22",
+  "image": "weslyg/nodejs-infra:node22-bookworm-0225-2",
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh/,target=/home/node/.ssh,readonly,type=bind",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.dotfiles,target=/home/node/.dotfiles,type=bind"
+  ],
+  "initializeCommand": "mkdir -p ~/.dotfiles",
+  "postCreateCommand": "stow --dir=$HOME/.dotfiles --target=$HOME . --adopt && npm install"
+}

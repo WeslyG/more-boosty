@@ -1,25 +1,27 @@
-import safeHTML from 'html-template-tag'
+import safeHTML from "html-template-tag";
 
 // Assets
-import iconImage from 'url:../assets/icon.png'
+import iconImage from "url:../assets/icon.png";
 
 // Changelog JSON
-import changelogText from '../assets/changelog.json'
+import changelogText from "../assets/changelog.json";
 
 // Chrome aliases
-const t = (name) => chrome.i18n.getMessage(name)
-const name = chrome.runtime.getManifest().name
-const version = chrome.runtime.getManifest().version
+const t = (name) => chrome.i18n.getMessage(name);
+const name = chrome.runtime.getManifest().name;
+const version = chrome.runtime.getManifest().version;
 
 // Checking browser language
-let uiLang = chrome.i18n.getUILanguage()
-if (uiLang !== 'ru' || uiLang !== 'en') {
-  uiLang = 'ru'
+let uiLang = chrome.i18n.getUILanguage();
+if (uiLang !== "ru" || uiLang !== "en") {
+  uiLang = "ru";
 }
 
 export const changelogButton = () => `
   <div class="TopMenu_messageContainer_bwglz MB_changelogButton append_animate">
-      <a class="TopMenu_messagesContainer_hzgjz" href="#" id="MB_changelog" title="${t('content_about')}">
+      <a class="TopMenu_messagesContainer_hzgjz" href="#" id="MB_changelog" title="${t(
+        "content_about"
+      )}">
           <span class="Icon_block_Hvwi5 TopMenu_iconMessages_zy_w6">
               <img src="${iconImage}" class="MB_icon"/>
           </span>
@@ -28,7 +30,7 @@ export const changelogButton = () => `
           </span>
       </a>
   </div>
-`
+`;
 
 export const changelogModal = () => `
   <div class="ScrollBox_scrollContainer_g0g0j Popup_wrapper_ZeN1U FadeIn_fade_ecikC FadeIn_entered_uFjQ8 MB_changelogModal fade_animate" id="MB_changelog_modal" style="z-index: 99999999;">
@@ -53,17 +55,17 @@ export const changelogModal = () => `
 
           <div class="PopupContent_content_A2EA3">
               <div>
-                  <h2>🎉 ${t('changelog_latest_version')}</h2>
-                  ${generateChangelogText('latest', uiLang)}
+                  <h2>🎉 ${t("changelog_latest_version")}</h2>
+                  ${generateChangelogText("latest", uiLang)}
               </div>
 
               <div>
-                  <h3>📒 ${t('changelog_previous_version')}</h3>
-                  <i>${generateChangelogText('previous', uiLang)}</i>
+                  <h3>📒 ${t("changelog_previous_version")}</h3>
+                  <i>${generateChangelogText("previous", uiLang)}</i>
               </div>
 
               <div>
-                  <h3>🎵 ${t('changelog_track_of_the_update')}</h3>
+                  <h3>🎵 ${t("changelog_track_of_the_update")}</h3>
                   ${generateChangelogMusicTrack()}
               </div>
           </div>
@@ -71,16 +73,16 @@ export const changelogModal = () => `
           <div class="ChangePhone_buttons_vP_uE Buttons_root_X0BDd">
 
               <a href="https://github.com/WeslyG/more-boosty" rel="noreferref noopener nofollow" target="_blank" class="BaseButton_button_yO8r5 OutlinedButton_button_gVLJD">
-                  ${t('options_support')}
+                  ${t("options_support")}
               </a>
 
               <a href="#" id="MB_optionsButton" class="BaseButton_button_yO8r5 OutlinedButton_button_gVLJD">
-                  ${t('options_title')}
+                  ${t("options_title")}
               </a>
           </div>
       </div>
   </div>
-`
+`;
 
 export const videoDownloadModal = (links) => `
 <div class="ScrollBox_scrollContainer_g0g0j Popup_wrapper_ZeN1U FadeIn_fade_ecikC FadeIn_entered_uFjQ8 fade_animate" id="MB_video_download" style="z-index: 99999999;">
@@ -92,7 +94,7 @@ export const videoDownloadModal = (links) => `
       <div class="PopupContent_title_IHD2G">
           <p>
               <strong>
-                  ${t('download_video_modal_title')}:
+                  ${t("download_video_modal_title")}:
               </strong>
           </p>
       </div>
@@ -102,11 +104,11 @@ export const videoDownloadModal = (links) => `
       </div>
   </div>
 </div>
-`
+`;
 
 export const pipButton = () => `
   <div class="container controls-element-indent-left controls-element-indent-right v-1r8g71r MB_pip" style="cursor: pointer">
-      <div role="button" tabindex="0" title="${t('content_pip')}">
+      <div role="button" tabindex="0" title="${t("content_pip")}">
           <svg class="icon v-daygaf" xmlns="http://www.w3.org/2000/svg">
               <g fill="#fff" fill-rule="evenodd">
                 <path class="_enter" d="M18 11 10 11 10 17 18 17 18 11 18 11ZM22 19 22 4.98C22 3.88 21.1 3 20 3L2 3C.9 3 0 3.88 0 4.98L0 19C0 20.1.9 21 2 21L20 21C21.1 21 22 20.1 22 19L22 19ZM20 19.02 2 19.02 2 4.97 20 4.97 20 19.02 20 19.02Z">
@@ -114,11 +116,15 @@ export const pipButton = () => `
           </svg>
       </div>
   </div>
-`
+`;
+
+export const VideoDownloadButton = (links) => `
+  <button>Скачать видео</button>
+`;
 
 export const videoDownloadButton = () => `
   <div class="container controls-element-indent-right v-1r8g71r MB_download" style="cursor: pointer">
-      <div role="button" tabindex="0" title="${t('content_download')}">
+      <div role="button" tabindex="0" title="${t("content_download")}">
           <svg class="icon v-daygaf" xmlns="http://www.w3.org/2000/svg">
               <g fill="#fff" fill-rule="evenodd">
                 <path class="_enter" d="M6 21H18A1 1 0 0018 19H6A1 1 0 006 21M19 10H15V3H9V10H5C7.3333 12.3333 9.6667 14.6667 12 17L19 10Z" />
@@ -126,11 +132,11 @@ export const videoDownloadButton = () => `
           </svg>
       </div>
   </div>
-`
+`;
 
 export const videoSpeedController = (initialPlaybackRate) => `
   <div class="container controls-element v-1r8g71r MB_speed_decrease" style="cursor: pointer">
-    <div role="button" tabindex="0" title="${t('player_speed_decrease')}">
+    <div role="button" tabindex="0" title="${t("player_speed_decrease")}">
       <svg class="icon v-daygaf" xmlns="http://www.w3.org/2000/svg">
         <g fill="#fff" fill-rule="evenodd">
           <path class="_enter" d="M20 12a1 1 0 01-1 1H5a1 1 0 110-2h14a1 1 0 011 1z" />
@@ -140,7 +146,9 @@ export const videoSpeedController = (initialPlaybackRate) => `
   </div>
 
   <div class="container controls-element v-1r8g71r MB_current_playback_rate" style="cursor: pointer;">
-    <div role="button" tabindex="0" title="${t('player_speed_reset')}" style="width: 40px; text-align: center;">
+    <div role="button" tabindex="0" title="${t(
+      "player_speed_reset"
+    )}" style="width: 40px; text-align: center;">
         <span>
           x${initialPlaybackRate}
         </span>
@@ -148,7 +156,7 @@ export const videoSpeedController = (initialPlaybackRate) => `
   </div>
 
   <div class="container controls-element-indent-right v-1r8g71r MB_speed_increase" style="cursor: pointer">
-    <div role="button" tabindex="0" title="${t('player_speed_increase')}">
+    <div role="button" tabindex="0" title="${t("player_speed_increase")}">
       <svg class="icon v-daygaf" xmlns="http://www.w3.org/2000/svg">
         <g fill="#fff" fill-rule="evenodd">
           <path class="_enter" d="M20 12a1 1 0 01-1 1h-6v6A1 1 0 0112 20a1 1 0 01-1-1v-6h-6a1 1 0 110-2h6v-6A1 1 0 0112 4a1 1 0 011 1v6h6a1 1 0 011 1z" />
@@ -156,7 +164,7 @@ export const videoSpeedController = (initialPlaybackRate) => `
       </svg>
     </div>
   </div>
-`
+`;
 
 export const audioControls = (url, initialPlaybackRate) => `
   <div class="MB_speed_control_wrapper">
@@ -194,7 +202,7 @@ export const audioControls = (url, initialPlaybackRate) => `
       </button>
     </div>
   </div>
-`
+`;
 
 // Do not extract the styles to content.scss
 export const timestampIndicator = (position) => `
@@ -207,28 +215,28 @@ export const timestampIndicator = (position) => `
       background-color: rgb(174,54,12);
       left: ${position}%;
   "></span>
-`
+`;
 
 const trackList = (track) => {
   const trackLink = (track) => safeHTML`
    <a href="${track.link}" rel="noreferref noopener nofollow" target="_blank">${track.name}</a>
-  `
+  `;
 
-  let links = ''
+  let links = "";
   track.links.forEach((link, key, array) => {
-    links += trackLink(link)
-    if (!Object.is(array.length - 1, key)) links += ' | '
-  })
+    links += trackLink(link);
+    if (!Object.is(array.length - 1, key)) links += " | ";
+  });
 
   return `
     <div style="margin-left: 24px;">
         ${track.producer} - <strong>${track.name}</strong></br>
         ${links}
     </div>
-  `
-}
+  `;
+};
 
-const noChangelog = '<ul><li>🤷</li></ul>'
+const noChangelog = "<ul><li>🤷</li></ul>";
 
 /**
  * Generates a changelog text from `changelog.json`
@@ -236,17 +244,17 @@ const noChangelog = '<ul><li>🤷</li></ul>'
  * @param {String} lang `ru` or `en`
  */
 const generateChangelogText = (type, lang) => {
-  if (changelogText[type] === undefined) return noChangelog
-  if (changelogText[type][lang] === undefined) return noChangelog
+  if (changelogText[type] === undefined) return noChangelog;
+  if (changelogText[type][lang] === undefined) return noChangelog;
 
-  let text = '<ul>'
+  let text = "<ul>";
   for (const change of changelogText[type][lang]) {
-    text += safeHTML`<li>${change}</li>`
+    text += safeHTML`<li>${change}</li>`;
   }
-  text += '</ul> '
+  text += "</ul> ";
 
-  return text
-}
+  return text;
+};
 
 /**
  * Generates a music track from `changelog.json`
@@ -255,26 +263,26 @@ const generateChangelogText = (type, lang) => {
  */
 const generateChangelogMusicTrack = () => {
   let track = {
-    producer: 'Darude',
-    name: 'Sandstorm',
+    producer: "Darude",
+    name: "Sandstorm",
     links: [
       {
-        name: 'YouTube',
-        link: 'https://youtu.be/y6120QOlsfU?ref=more_boosty'
+        name: "YouTube",
+        link: "https://youtu.be/y6120QOlsfU?ref=more_boosty",
       },
       {
-        name: 'Spotify',
-        link: 'https://open.spotify.com/track/3dxDj8pDPlIHCIrUPXuCeG?si=188b40ce99aa4592?ref=more_boosty'
-      }
-    ]
-  }
+        name: "Spotify",
+        link: "https://open.spotify.com/track/3dxDj8pDPlIHCIrUPXuCeG?si=188b40ce99aa4592?ref=more_boosty",
+      },
+    ],
+  };
 
   if (changelogText.track) {
-    track = changelogText.track
+    track = changelogText.track;
   }
 
-  return trackList(track)
-}
+  return trackList(track);
+};
 
 /**
  * Gererates a video download buttons for the modal
@@ -282,12 +290,14 @@ const generateChangelogMusicTrack = () => {
  * @returns
  */
 const generateVideoDownloadLinks = (urls) => {
-  let text = ''
+  let text = "";
   for (const url of urls) {
-    text += safeHTML`<button data-url="${url.url}" class="MB_video_download_link BaseButton_button_yO8r5 OutlinedButton_button_gVLJD">
+    text += safeHTML`<button data-url="${
+      url.url
+    }" class="MB_video_download_link BaseButton_button_yO8r5 OutlinedButton_button_gVLJD">
       ${t(`video_quality_${url.type}`)}
-    </button>`
+    </button>`;
   }
 
-  return text
-}
+  return text;
+};
