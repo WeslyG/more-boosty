@@ -26,9 +26,6 @@
       "js": [
         "content/content.js"
       ],
-      "css": [
-        "content/content.scss"
-      ],
       "run_at": "document_idle"
     }
   ],
