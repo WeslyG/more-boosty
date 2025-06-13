@@ -59,6 +59,9 @@ const injectVideoControls = (videoId, canBeDownloaded, vkVideoPlayer) => {
     const videoUrls = contentCache.get(videoId);
     console.debug("videoUrls", videoUrls);
 
+    // Получаем previewUrl из первого объекта (они одинаковые для всех качеств)
+    const previewUrl = videoUrls?.[0]?.previewUrl || null;
+
     const videoPlayer = findParentByString(vkVideoPlayer, "VideoPlayer-");
 
     if (!videoPlayer.querySelector(":has(.downloaderLinkGenerator)")) {
@@ -71,7 +74,7 @@ const injectVideoControls = (videoId, canBeDownloaded, vkVideoPlayer) => {
       }
       videoPlayer.lastElementChild.insertAdjacentHTML(
         "beforeEnd",
-        templates.VideoDownloadButtonShort(videoUrls.slice(0, 5))
+        templates.VideoDownloadButtonShort(videoUrls.slice(0, 4), previewUrl)
       );
     }
   }

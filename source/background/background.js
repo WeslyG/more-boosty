@@ -106,7 +106,12 @@ const filterVideos = (data, type) => {
     .map(({ playerUrls, preview }) => {
       const videoUrls = helpers.filterVideoUrls(playerUrls);
       const videoId = helpers.parseVideoId(preview);
-      return { videoUrls, videoId };
+      // Добавляем previewUrl в каждый объект videoUrls
+      const videoUrlsWithPreview = videoUrls.map((url) => ({
+        ...url,
+        previewUrl: preview,
+      }));
+      return { videoUrls: videoUrlsWithPreview, videoId };
     });
 };
 

@@ -8,18 +8,19 @@ if (uiLang !== "ru" || uiLang !== "en") {
   uiLang = "ru";
 }
 
-export const VideoDownloadButtonShort = (links) => `
+export const VideoDownloadButtonShort = (links, previewUrl) => `
   <div class="downloaderLinkGenerator">
-      ${generateVideoDownloadLinks(links)}
+      ${generateVideoDownloadLinks(links, previewUrl)}
   </div>
 `;
 
 /**
- * Gererates a video download buttons for the modal
+ * Generates video download buttons for the modal, plus preview button
  * @param {Object[]} urls
+ * @param {String} previewUrl
  * @returns
  */
-const generateVideoDownloadLinks = (urls) => {
+const generateVideoDownloadLinks = (urls, previewUrl) => {
   let text = "";
   for (const url of urls) {
     text += safeHTML`<a href="${
@@ -28,6 +29,11 @@ const generateVideoDownloadLinks = (urls) => {
       ${t(`video_quality_${url.type}`)}
     </a>`;
   }
-
+  // Add preview button if previewUrl is provided
+  if (previewUrl) {
+    text += safeHTML`<a href="${previewUrl}" target="_blank" style="border-radius: 3px; margin: 7px 0 0 14px; color: white; background-color: #888; display: inline-block; padding: 0 30px; text-decoration: none; text-align: center; cursor: pointer;">
+      preview
+    </a>`;
+  }
   return text;
 };
