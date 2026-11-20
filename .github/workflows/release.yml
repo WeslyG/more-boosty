@@ -3,12 +3,22 @@ name: Release
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to publish
+        required: true
+        default: v1.0.0
+        type: string
+
+env:
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -20,6 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ env.RELEASE_TAG }}
           fetch-depth: 0
           persist-credentials: false
       - name: Check release branch
@@ -31,13 +42,9 @@ jobs:
       - run: npm ci
       - run: npm test
       - name: Build verified release assets
-        env:
-          RELEASE_TAG: ${{ github.ref_name }}
         run: npm run release
       - name: Record validated tag
         id: metadata
-        env:
-          RELEASE_TAG: ${{ github.ref_name }}
         run: echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
