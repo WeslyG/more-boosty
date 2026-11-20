@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, nuc01]
     timeout-minutes: 10
     outputs:
       tag: ${{ steps.metadata.outputs.tag }}
@@ -48,7 +48,7 @@ jobs:
 
   publish:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64, nuc01]
     timeout-minutes: 5
     permissions:
       contents: write
