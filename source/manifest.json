@@ -1,22 +1,20 @@
 {
   "name": "More Boosty",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "__MSG_description__",
-  "homepage_url": "https://vk.com/iamcjmaxik?ref=more_boosty",
+  "homepage_url": "https://github.com/WeslyG/more-boosty",
   "manifest_version": 3,
-  "minimum_chrome_version": "100",
+  "minimum_chrome_version": "109",
   "default_locale": "en",
-  "icons": {
-    "128": "assets/icon.png",
-    "24": "assets/icon24.png"
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; connect-src https://api.boosty.to; base-uri 'none'; frame-src 'none'"
   },
-  "permissions": [
-    "storage",
-    "notifications",
-    "alarms"
-  ],
+  "icons": {
+    "24": "assets/icon24.png",
+    "128": "assets/icon.png"
+  },
   "host_permissions": [
-    "https://*.boosty.to/*"
+    "https://api.boosty.to/*"
   ],
   "content_scripts": [
     {
@@ -26,12 +24,12 @@
       "js": [
         "content/content.js"
       ],
+      "css": [
+        "content/content.css"
+      ],
       "run_at": "document_idle"
     }
   ],
-  "options_ui": {
-    "page": "options/options.html"
-  },
   "background": {
     "service_worker": "background/background.js",
     "type": "module"

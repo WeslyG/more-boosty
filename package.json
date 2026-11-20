@@ -1,48 +1,21 @@
 {
+  "name": "more-boosty",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "license": "MIT",
   "scripts": {
-    "clean": "shx rm -rf distribution .parcel-cache",
-    "release": "zip -r release.zip distribution && echo 'Release package created: release.zip'",
-    "build": "npm run clean && parcel build source/manifest.json --no-content-hash --no-source-maps --dist-dir distribution --no-cache --detailed-report 0",
-    "watch": "npm run clean && parcel watch source/manifest.json --host localhost --dist-dir distribution --no-cache"
+    "build": "node scripts/build.js",
+    "release": "node scripts/build.js && node scripts/package.js && node scripts/check-package.js && node scripts/prepare-release.js",
+    "test": "node --test",
+    "version": "node scripts/sync-version.js"
   },
   "engines": {
-    "node": ">=18"
-  },
-  "browserslist": [
-    "last 1 Chrome version",
-    "last 1 Firefox version"
-  ],
-  "standard": {
-    "globals": [
-      "chrome",
-      "location",
-      "MutationObserver"
-    ]
-  },
-  "dependencies": {
-    "html-template-tag": "^4.0.1",
-    "minstyle.io": "^2.0.2",
-    "webext-base-css": "^1.4.3",
-    "webext-options-sync": "^4.2.1"
+    "node": ">=22.13"
   },
   "devDependencies": {
-    "@parcel/config-webextension": "~2.8.3",
-    "@parcel/transformer-sass": "~2.8.3",
-    "parcel": "~2.8.3",
-    "shx": "^0.3.4",
-    "standard": "*"
-  },
-  "webExt": {
-    "sourceDir": "distribution",
-    "run": {
-      "startUrl": [
-        "https://github.com/weslyg/more-boosty"
-      ]
-    }
-  },
-  "@parcel/bundler-default-bug": "https://github.com/parcel-bundler/parcel/issues/8071",
-  "@parcel/bundler-default": {
-    "minBundles": 10000000
+    "esbuild": "0.28.2",
+    "fflate": "0.8.3",
+    "jsdom": "29.1.1"
   }
 }

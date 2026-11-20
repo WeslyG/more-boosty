@@ -1,99 +1,20 @@
 {
   "description": {
-    "message": "Улучшаем интерфейс и функции Boosty"
+    "message": "Ссылки на скачивание доступных вам видео Boosty с выбором качества и сохранением превью."
   },
-  "options_title": {
-    "message": "Параметры"
-  },
-  "options_restart_required": {
-    "message": "Необходима перезагрузка"
-  },
-  "options_restart_alert": {
-    "message": "Перезагрузите браузер перед использованием расширения!"
-  },
-  "options_full_layout": {
-    "message": "Широкоформатный режим"
-  },
-  "options_full_layout_desc": {
-    "message": "страница растягивается на 95% ширины окна"
-  },
-  "options_force_video_quality": {
-    "message": "Изменять качество видео"
-  },
-  "options_video_quality": {
-    "message": "Качество видео"
-  },
-  "options_video_quality_desc": {
-    "message": "только для плеера Boosty"
-  },
-  "options_theater_mode": {
-    "message": "Режим кинотеатра для стримов на Boosty"
-  },
-  "options_theater_mode_desc": {
-    "message": "скролл вниз для отображения верхнего меню"
-  },
-  "options_save_last_timestamp": {
-    "message": "Запоминать, где остановились в аудио/видео"
-  },
-  "options_save_last_timestamp_desc_1": {
-    "message": "только для плееров Boosty"
-  },
-  "options_save_last_timestamp_desc_2": {
-    "message": "сохраняется локально на 7 дней, раз в 10 секунд"
-  },
-  "options_save_last_timestamp_desc_3": {
-    "message": "первые и последние 60 секунд игнорируются"
-  },
-  "options_saved": {
-    "message": "Изменения сохраняются автоматически"
-  },
-  "options_donut_link": {
-    "message": "Задонатить!"
-  },
-  "options_support": {
-    "message": "Новости и поддержка"
-  },
-  "options_github_link": {
-    "message": "Исходный код"
-  },
-  "content_about": {
-    "message": "О расширении More Boosty"
-  },
-  "content_options_link": {
-    "message": "Параметры More Boosty",
-    "description": "`More Boosty` - название расширения. Не переводить! `Параметры` - перевод понятия Options для настроек расширений в Chrome."
-  },
-  "content_pip": {
-    "message": "Картинка в картинке"
-  },
-  "content_download": {
+  "download_video": {
     "message": "Скачать видео"
   },
-  "changelog": {
-    "message": "Список изменений"
+  "download_preview": {
+    "message": "Превью"
   },
-  "changelog_latest_version": {
-    "message": "Вот что новенького:"
+  "load_video_links": {
+    "message": "Показать ссылки на видео"
   },
-  "changelog_previous_version": {
-    "message": "В предыдущих обновлениях:"
+  "privacy_notice": {
+    "message": "More Boosty прочитает токен сессии Boosty и отправит его только API Boosty для этого поста или диалога. Ответ может включать текст поста или до 300 последних сообщений диалога; в памяти временно кэшируются только ссылки на видео. Разработчику данные не передаются. При открытии ссылки браузер обращается к медиасерверу, указанному Boosty."
   },
-  "changelog_track_of_the_update": {
-    "message": "Музыкальный трек обновления:"
-  },
-  "extension_has_been_updated": {
-    "message": "More Boosty обновился!"
-  },
-  "download_video_modal_title": {
-    "message": "Выбери качество видео"
-  },
-  "player_speed_decrease": {
-    "message": "Замедлить воспроизведение"
-  },
-  "player_speed_reset": {
-    "message": "Сбросить/вернуть скорость воспроизведения"
-  },
-  "player_speed_increase": {
-    "message": "Ускорить воспроизведение"
+  "download_rights": {
+    "message": "Сохраняйте только свои материалы или видео, на скачивание которых у вас есть разрешение. Доступ к просмотру сам по себе не даёт права на скачивание."
   }
 }

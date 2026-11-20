@@ -1,123 +1,20 @@
 {
   "description": {
-    "message": "Improve interface and features on Boosty"
+    "message": "Download links for Boosty videos you can access, with quality selection and preview images."
   },
-  "options_title": {
-    "message": "Options"
-  },
-  "options_restart_required": {
-    "message": "Restart required"
-  },
-  "options_restart_alert": {
-    "message": "Please restart the browser before using this extension!"
-  },
-  "options_full_layout": {
-    "message": "Widescreen layout"
-  },
-  "options_full_layout_desc": {
-    "message": "page is now 95% of screen width"
-  },
-  "options_force_video_quality": {
-    "message": "Force video quailty"
-  },
-  "options_video_quality": {
-    "message": "Video quailty"
-  },
-  "options_video_quality_desc": {
-    "message": "for Boosty video player only"
-  },
-  "options_theater_mode": {
-    "message": "Theater mode for Boosty streams"
-  },
-  "options_theater_mode_desc": {
-    "message": "scroll down to reveal the top menu"
-  },
-  "options_save_last_timestamp": {
-    "message": "Save where you left off video/audio"
-  },
-  "options_save_last_timestamp_desc_1": {
-    "message": "for Boosty players only"
-  },
-  "options_save_last_timestamp_desc_2": {
-    "message": "saved locally for 7 days, every 10 seconds"
-  },
-  "options_save_last_timestamp_desc_3": {
-    "message": "first and last 60 seconds are ignored"
-  },
-  "options_saved": {
-    "message": "Changes are saved automatically"
-  },
-  "options_donut_link": {
-    "message": "Donate!"
-  },
-  "options_support": {
-    "message": "News and support"
-  },
-  "options_github_link": {
-    "message": "Source code"
-  },
-  "content_about": {
-    "message": "About More Boosty"
-  },
-  "content_options_link": {
-    "message": "More Boosty options",
-    "description": "`More Boosty` is the extension name, do not translate! `Options` is the term for extension settings in Chrome."
-  },
-  "content_pip": {
-    "message": "Picture-in-picture"
-  },
-  "content_download": {
+  "download_video": {
     "message": "Download video"
   },
-  "changelog": {
-    "message": "Changelog"
+  "download_preview": {
+    "message": "Preview"
   },
-  "changelog_latest_version": {
-    "message": "New stuff in this update:"
+  "load_video_links": {
+    "message": "Show video links"
   },
-  "changelog_previous_version": {
-    "message": "Previously:"
+  "privacy_notice": {
+    "message": "More Boosty will read your Boosty session token and send it only to the Boosty API for this post or dialog. The response may include post text or up to 300 recent dialog messages; only video links are cached temporarily in memory. No data is sent to the developer. Opening a link connects your browser to the media host supplied by Boosty."
   },
-  "changelog_track_of_the_update": {
-    "message": "Music track of this update:"
-  },
-  "extension_has_been_updated": {
-    "message": "More Boosty has been updated!"
-  },
-  "download_video_modal_title": {
-    "message": "Select a video quality"
-  },
-  "video_quality_ultra_hd": {
-    "message": "2160p"
-  },
-  "video_quality_quad_hd": {
-    "message": "1440p"
-  },
-  "video_quality_full_hd": {
-    "message": "1080p"
-  },
-  "video_quality_high": {
-    "message": "720p"
-  },
-  "video_quality_medium": {
-    "message": "480p"
-  },
-  "video_quality_low": {
-    "message": "360p"
-  },
-  "video_quality_lowest": {
-    "message": "240p"
-  },
-  "video_quality_tiny": {
-    "message": "144p"
-  },
-  "player_speed_decrease": {
-    "message": "Decrease playback speed"
-  },
-  "player_speed_reset": {
-    "message": "Reset/return playback speed"
-  },
-  "player_speed_increase": {
-    "message": "Increase playback speed"
+  "download_rights": {
+    "message": "Save only your own content or videos you have permission to download. Viewing access alone is not permission to download."
   }
 }

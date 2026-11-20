@@ -1,7 +1,0 @@
-{
-  "files.exclude": {
-    "**/.parcel-cache": true
-  },
-  "standard.autoFixOnSave": true,
-  "javascript.format.enable": false
-}

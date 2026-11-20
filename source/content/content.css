@@ -1,0 +1,57 @@
+.more-boosty-downloads,
+.more-boosty-request {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  font: 14px/1.5 system-ui, sans-serif;
+}
+
+.more-boosty-request {
+  display: block;
+}
+
+.more-boosty-downloads {
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+}
+
+.more-boosty-request > p {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.more-boosty-downloads > a,
+.more-boosty-request > button {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 4px 16px;
+  color: #fff;
+  background: #c74216;
+  text-decoration: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.more-boosty-downloads > a:hover,
+.more-boosty-request > button:hover {
+  background: #a93611;
+}
+
+.more-boosty-downloads > .more-boosty-preview {
+  background: #626975;
+}
+
+.more-boosty-downloads > .more-boosty-preview:hover {
+  background: #4c5360;
+}
+
+.more-boosty-downloads > a:focus-visible,
+.more-boosty-request > button:focus-visible {
+  outline: 2px solid #c74216;
+  outline-offset: 2px;
+}

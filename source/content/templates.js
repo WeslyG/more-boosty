@@ -1,39 +1,38 @@
-import safeHTML from "html-template-tag";
+import { isHttpsUrl, videoQualityLabels } from '../global/helpers.js';
 
-const t = (name) => chrome.i18n.getMessage(name);
+export const createRequestPrompt = (document, translate, accept) => {
+  const container = document.createElement('div');
+  container.className = 'more-boosty-request';
+  const notice = document.createElement('p');
+  notice.textContent = translate('privacy_notice');
+  const rights = document.createElement('p');
+  rights.textContent = translate('download_rights');
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = translate('load_video_links');
+  button.addEventListener('click', accept, { once: true });
+  container.append(notice, rights, button);
+  return container;
+};
 
-// Checking browser language
-let uiLang = chrome.i18n.getUILanguage();
-if (uiLang !== "ru" || uiLang !== "en") {
-  uiLang = "ru";
-}
+export const createDownloadLinks = (document, video, translate) => {
+  const container = document.createElement('div');
+  container.className = 'more-boosty-downloads';
+  container.setAttribute('role', 'group');
+  container.setAttribute('aria-label', translate('download_video'));
 
-export const VideoDownloadButtonShort = (links, previewUrl) => `
-  <div class="downloaderLinkGenerator">
-      ${generateVideoDownloadLinks(links, previewUrl)}
-  </div>
-`;
+  const addLink = (url, label, isPreview = false) => {
+    if (!isHttpsUrl(url)) return;
+    const link = document.createElement('a');
+    link.href = url;
+    link.textContent = label;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    if (isPreview) link.className = 'more-boosty-preview';
+    container.append(link);
+  };
 
-/**
- * Generates video download buttons for the modal, plus preview button
- * @param {Object[]} urls
- * @param {String} previewUrl
- * @returns
- */
-const generateVideoDownloadLinks = (urls, previewUrl) => {
-  let text = "";
-  for (const url of urls) {
-    text += safeHTML`<a href="${
-      url.url
-    }" target="_blank" style="border-radius: 3px; margin: 7px 0 0 14px; color: white; background-color: rgb(241, 95, 44); display: inline-block; padding: 0 30px; text-decoration: none; text-align: center; cursor: pointer;">
-      ${t(`video_quality_${url.type}`)}
-    </a>`;
-  }
-  // Add preview button if previewUrl is provided
-  if (previewUrl) {
-    text += safeHTML`<a href="${previewUrl}" target="_blank" style="border-radius: 3px; margin: 7px 0 0 14px; color: white; background-color: #888; display: inline-block; padding: 0 30px; text-decoration: none; text-align: center; cursor: pointer;">
-      preview
-    </a>`;
-  }
-  return text;
+  for (const { url, type } of video.videoUrls) addLink(url, videoQualityLabels[type]);
+  if (video.previewUrl) addLink(video.previewUrl, translate('download_preview'), true);
+  return container;
 };

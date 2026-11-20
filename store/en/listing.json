@@ -1,0 +1,12 @@
+{
+  "name": "More Boosty",
+  "short_description": "Download links for Boosty videos you can access, with quality selection and preview images.",
+  "description": "More Boosty displays quality-specific Boosty video links and a separate preview-image link directly below the player.\n\nHow to use:\n1. Open a post or dialog containing a video.\n2. Read the data-use notice and select “Show video links”.\n3. Choose a quality. The link opens in a new tab; save the video using your browser.\n\nSupported contexts include individual posts, author feeds, media views and videos in up to 300 recent messages from the selected dialog. Restricted posts require a Boosty login and the appropriate access.\n\nAfter your action, the extension reads the current Boosty session token and sends it only to the Boosty API to obtain the selected content's links. The response may include post text or dialog messages; only video metadata is cached. Processing and storage are temporary, in memory. The developer does not receive this data. Opening a video or preview link connects your browser to the media host supplied by Boosty. There is no advertising or analytics.\n\nSave your own content or content you have permission to download. Viewing access or a paid subscription alone does not establish permission to download.\n\nMore Boosty is independent and is not affiliated with Boosty.",
+  "single_purpose": "Show quality-specific video download links and preview images for Boosty content that the user is authorized to save.",
+  "host_permission_justification": "Access to https://api.boosty.to/* is required to retrieve video metadata for the specific Boosty post or dialog requested by the user. The content script runs only on https://boosty.to/* to identify players and display links. The current Boosty session token is read only after the in-page data-use notice and user action and is sent only to the Boosty API.",
+  "uses_remote_code": false,
+  "privacy_policy_url": "https://github.com/WeslyG/more-boosty/blob/main/PRIVACY.md",
+  "homepage_url": "https://github.com/WeslyG/more-boosty",
+  "support_url": "https://github.com/WeslyG/more-boosty/issues",
+  "screenshot": "../../docs/images/screenshot-en.png"
+}

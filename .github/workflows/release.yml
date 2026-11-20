@@ -1,81 +1,74 @@
-env:
-  DIRECTORY: distribution
-
-# FILE GENERATED WITH: npx ghat fregante/ghatemplates/webext
-# SOURCE: https://github.com/fregante/ghatemplates
-# OPTIONS: {"exclude":["on.schedule"]}
-
 name: Release
+
 on:
-  workflow_dispatch: null
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  Version:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
-      created: ${{ steps.daily-version.outputs.created }}
-      version: ${{ steps.daily-version.outputs.version }}
-    runs-on: ubuntu-latest
+      tag: ${{ steps.metadata.outputs.tag }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 20
-      - uses: actions/setup-node@v3
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check release branch
+        run: git merge-base --is-ancestor HEAD origin/main
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 18
+          node-version: 24
           cache: npm
-      - name: install
-        run: npm ci || npm install
-      # - run: npm test
-      - uses: fregante/daily-version-action@v2
-        name: Create tag if necessary
-        id: daily-version
-      - if: steps.daily-version.outputs.created
-        name: Create release
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: >
-            await github.request(`POST /repos/${{ github.repository
-            }}/releases`, {
-              tag_name: "${{ steps.daily-version.outputs.version }}",
-              generate_release_notes: true
-            });
-  Submit:
-    needs: Version
-    if: github.event_name == 'workflow_dispatch' || needs.Version.outputs.created
-    strategy:
-      fail-fast: false
-      matrix:
-        command:
-          # - firefox
-          - chrome
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: npm
-      - name: install
-        run: npm ci || npm install
-      - run: npm run build --if-present
-      - name: Update extension’s meta
-        run: >-
-          npx dot-json@1 $DIRECTORY/manifest.json version ${{
-          needs.Version.outputs.version }}
-      - name: Submit
-        run: |
-          case ${{ matrix.command }} in
-            chrome)
-              cd $DIRECTORY && npx chrome-webstore-upload-cli@2 upload --auto-publish
-              ;;
-            firefox)
-              cd $DIRECTORY && npx web-ext-submit@7
-              ;;
-          esac
+      - run: npm ci
+      - run: npm test
+      - name: Build verified release assets
         env:
-          EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          # WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
-          # WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: npm run release
+      - name: Record validated tag
+        id: metadata
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-${{ github.sha }}
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-${{ github.sha }}
+          path: artifacts
+      - name: Verify artifact checksum
+        working-directory: artifacts
+        run: sha256sum --check SHA256SUMS
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.build.outputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            "artifacts/more-boosty-$RELEASE_TAG.zip" \
+            artifacts/SHA256SUMS \
+            --verify-tag \
+            --title "More Boosty $RELEASE_TAG" \
+            --notes-file artifacts/release-notes.md
