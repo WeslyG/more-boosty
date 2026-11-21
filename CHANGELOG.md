@@ -8,11 +8,13 @@
 
 ### Русский
 
+- Добавлены ссылки установки из Chrome Web Store в оба README.
 - Проверки и релизы используют общие GitHub runners; существующий тег можно опубликовать ручным запуском Release.
 - Скриншоты README и карточек стора показывают название поста, плеер и кнопки, без канала и комментариев.
 
 ### English
 
+- Added Chrome Web Store installation links to both READMEs.
 - Checks and releases use GitHub-hosted runners; existing tags can be published through a manual Release run.
 - README and store screenshots show the post title, player and buttons, without channel details or comments.
 

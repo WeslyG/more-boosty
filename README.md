@@ -23,6 +23,10 @@ More Boosty помогает сохранить доступное вам вид
 
 ## Установка
 
+Установите [More Boosty из Chrome Web Store](https://chromewebstore.google.com/detail/more-boosty/cbdimpbiobgfcfhnjjnnmmbojdijlcim), затем обновите вкладку Boosty.
+
+### Установка вручную
+
 1. Откройте [GitHub Releases](https://github.com/WeslyG/more-boosty/releases) и скачайте
    `more-boosty-vX.Y.Z.zip` из нужного выпуска.
 2. Распакуйте архив в отдельную папку.

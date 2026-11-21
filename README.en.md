@@ -23,6 +23,10 @@ Save your own content or videos you have permission to download.
 
 ## Installation
 
+Install [More Boosty from the Chrome Web Store](https://chromewebstore.google.com/detail/more-boosty/cbdimpbiobgfcfhnjjnnmmbojdijlcim), then reload your Boosty tab.
+
+### Manual installation
+
 1. Open [GitHub Releases](https://github.com/WeslyG/more-boosty/releases) and download
    `more-boosty-vX.Y.Z.zip` from the release you want.
 2. Extract the archive to a separate folder.
