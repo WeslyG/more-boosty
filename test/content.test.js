@@ -32,7 +32,7 @@ const setup = (sendMessage = async () => ({ videos: [video('one'), video('two')]
   window.clearTimeout = (id) => timers.delete(id);
   window.Date.now = () => clock;
   window.chrome = {
-    i18n: { getMessage: (key) => key === 'download_preview' ? 'Preview' : 'Download video' },
+    i18n: { getMessage: (key, quality) => ({ download_quality: 'Download ' + quality, download_preview: 'Preview' })[key] ?? key },
     runtime: { sendMessage: (message) => { calls.push(message); return sendMessage(message); } },
   };
   const flush = async () => {
@@ -50,12 +50,18 @@ const setup = (sendMessage = async () => ({ videos: [video('one'), video('two')]
   };
   const addPlayer = (id, ready = true) => {
     const host = window.document.createElement('div');
-    host.className = 'VideoPlayer-test';
+    host.className = 'VideoBlock-test';
+    const aspect = window.document.createElement('div');
+    aspect.className = 'VideoPlayerContainer-test';
+    const positioned = window.document.createElement('div');
+    positioned.className = 'VideoPlayer-test';
     const player = window.document.createElement('vk-video-player');
     const shadowHost = window.document.createElement('div');
     shadowHost.className = 'shadow-root-container';
     player.append(shadowHost);
-    host.append(player);
+    positioned.append(player);
+    aspect.append(positioned);
+    host.append(aspect);
     window.document.querySelector('#root').append(host);
     const initialize = () => {
       const root = shadowHost.attachShadow({ mode: 'open' });
@@ -89,7 +95,15 @@ test('auth is not read and nothing is requested until the user approves this con
   assert.equal(authReads, 0);
   assert.equal(app.calls.length, 0);
   assert.equal(app.window.document.querySelectorAll('.more-boosty-request button').length, 1);
+  const prompt = app.window.document.querySelector('.more-boosty-request');
+  assert.equal(prompt.closest('.more-boosty-panel').previousElementSibling.className, 'VideoPlayerContainer-test');
+  assert.equal(prompt.closest('.VideoPlayer-test'), null);
+  const panel = prompt.closest('.more-boosty-panel');
+  const notice = prompt.querySelector('p');
   await app.approve();
+  assert.equal(panel.querySelector('p'), notice);
+  assert.equal(app.window.document.querySelector('.more-boosty-panel'), panel);
+  assert.equal(app.window.document.querySelector('.more-boosty-request'), prompt);
   assert.ok(authReads > 0);
   assert.equal(app.calls.length, 1);
   app.window.history.pushState({}, '', '/author/posts/unapproved');
@@ -113,8 +127,9 @@ test('multiple players get all qualities and preview, without duplicate controls
   for (const { host } of [first, second]) {
     assert.equal(host.querySelectorAll('.more-boosty-downloads').length, 1);
     assert.equal(host.querySelectorAll('a').length, 7);
+    assert.ok(host.querySelector('.more-boosty-panel .more-boosty-notice-title'));
     assert.deepEqual([...host.querySelectorAll('a')].map((a) => a.textContent),
-      ['2160p', '1440p', '1080p', '720p', '480p', '360p', 'Preview']);
+      ['Download 2160p', 'Download 1440p', 'Download 1080p', 'Download 720p', 'Download 480p', 'Download 360p', 'Preview']);
   }
   for (let index = 0; index < 20; index++) first.root.querySelector('.container').setAttribute('data-time', index);
   await app.flush();
@@ -192,6 +207,13 @@ test('temporary message errors retry, while persistent errors stop after three a
   await failed.approve();
   for (let index = 0; index < 5; index++) await failed.advance(5000);
   assert.equal(failed.calls.length, 3);
+  const retry = failed.window.document.querySelector('.more-boosty-request > button');
+  assert.equal(retry.textContent, 'retry_video_links');
+  assert.equal(retry.hasAttribute('aria-disabled'), false);
+  retry.click();
+  assert.equal(retry.textContent, 'loading_video_links');
+  await failed.flush();
+  assert.equal(failed.calls.length, 4);
 });
 
 test('removed controls are restored even after repeated site rerenders', async (t) => {
@@ -205,6 +227,44 @@ test('removed controls are restored even after repeated site rerenders', async (
     await app.flush();
     assert.equal(host.querySelectorAll('a').length, 7);
   }
+});
+
+test('feed navigation mounts controls for the new card without reloading', async (t) => {
+  const app = setup();
+  t.after(app.close);
+  const { window } = app;
+  window.history.replaceState({}, '', '/author');
+  const addFeedVideo = (videoId, postId) => {
+    const { host } = app.addPlayer(videoId);
+    const card = window.document.createElement('div');
+    card.className = 'Post-scss--module_root_test';
+    const permalink = window.document.createElement('a');
+    permalink.className = 'CreatedAt-scss--module_headerLink_test';
+    permalink.href = '/author/posts/' + postId;
+    host.before(card);
+    const article = window.document.createElement('article');
+    article.className = 'Post-scss--module_content_test';
+    article.append(host);
+    const readMore = window.document.createElement('button');
+    readMore.textContent = 'Read more';
+    card.append(permalink, article, readMore);
+    return card;
+  };
+  const first = addFeedVideo('one', 'first');
+  app.start();
+  await app.approve();
+  assert.equal(app.calls[0].metadata.id, 'first');
+  first.remove();
+  const second = addFeedVideo('two', 'second');
+  await app.flush();
+  const panel = second.querySelector('.more-boosty-panel');
+  assert.ok(panel.querySelector('.more-boosty-request button'));
+  assert.ok(panel.closest('article'));
+  assert.equal(panel.previousElementSibling.className, 'VideoPlayerContainer-test');
+  assert.equal(app.calls.length, 1);
+  await app.approve();
+  assert.equal(app.calls[1].metadata.id, 'second');
+  assert.match(second.querySelector('.more-boosty-downloads a').href, /two/);
 });
 
 test('metadata follows the player in feeds and media overlays', () => {
@@ -245,6 +305,137 @@ test('links use safe DOM APIs and isolate newly opened tabs', () => {
   assert.equal(controls.querySelectorAll('a').length, 1);
   assert.equal(controls.querySelectorAll('img, script').length, 0);
   assert.equal(controls.querySelector('a').rel, 'noopener noreferrer');
-  assert.equal(controls.querySelector('a').textContent, '360p');
+  assert.equal(controls.querySelector('a').textContent, '<img src=x onerror=alert(1)>');
   dom.window.close();
+});
+
+test('quality menu moves focus through links and returns it to the trigger', async (t) => {
+  const app = setup();
+  t.after(app.close);
+  app.addPlayer('one');
+  app.start();
+  await app.approve();
+  const { document, Event, KeyboardEvent } = app.window;
+  const menu = document.querySelector('.more-boosty-menu');
+  const trigger = menu.querySelector('summary');
+  const list = menu.querySelector('.more-boosty-quality-list');
+  const links = [...list.querySelectorAll('a')];
+  const press = (key, options) => document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
+    key, bubbles: true, cancelable: true, ...options,
+  }));
+
+  trigger.focus();
+  trigger.click();
+  assert.equal(menu.open, true);
+  assert.equal(document.activeElement, links[0]);
+  // Moving the pointer over another resolution must not move keyboard focus.
+  links[2].dispatchEvent(new Event('pointermove', { bubbles: true }));
+  assert.equal(list.hasAttribute('data-pointer'), true);
+  assert.equal(document.activeElement, links[0]);
+  list.dispatchEvent(new Event('pointerleave'));
+  assert.equal(list.hasAttribute('data-pointer'), false);
+  links[2].dispatchEvent(new Event('pointermove', { bubbles: true }));
+  links[0].blur();
+  links[0].focus();
+  assert.equal(list.hasAttribute('data-pointer'), false);
+  links[2].dispatchEvent(new Event('pointermove', { bubbles: true }));
+  press('ArrowDown');
+  assert.equal(list.hasAttribute('data-pointer'), false);
+  assert.equal(document.activeElement, links[1]);
+  press('End');
+  assert.equal(document.activeElement, links.at(-1));
+  press('Escape');
+  assert.equal(menu.open, false);
+  assert.equal(document.activeElement, trigger);
+
+  press('ArrowDown');
+  assert.equal(document.activeElement, links[0]);
+  press('Tab', { shiftKey: true });
+  assert.equal(menu.open, false);
+  assert.equal(document.activeElement, trigger);
+
+  press('ArrowUp');
+  assert.equal(document.activeElement, links.at(-1));
+  document.querySelector('.more-boosty-preview').focus();
+  assert.equal(menu.open, false);
+
+  trigger.click();
+  document.body.click();
+  assert.equal(menu.open, false);
+});
+
+test('a preview keeps its panel and button while the player initializes during loading', async (t) => {
+  const resolvers = [];
+  const app = setup(() => new Promise((resolve) => resolvers.push(resolve)));
+  t.after(app.close);
+  const { document } = app.window;
+  const block = document.createElement('div');
+  block.className = 'VideoBlock-scss--module_root_preview';
+  document.querySelector('#root').append(block);
+  app.start();
+  await app.flush();
+
+  assert.equal(block.nextElementSibling, null);
+  await app.advance(240);
+  const panel = block.nextElementSibling;
+  const button = panel.querySelector('button');
+  panel.remove();
+  await app.flush();
+  assert.equal(block.nextElementSibling, panel);
+  button.focus();
+  button.click();
+  assert.equal(button.textContent, 'loading_video_links');
+  assert.equal(button.getAttribute('aria-disabled'), 'true');
+  button.click();
+  await app.flush();
+  assert.equal(app.calls.length, 1);
+
+  const { host } = app.addPlayer('one');
+  block.append(host);
+  await app.flush();
+  assert.equal(block.nextElementSibling, panel);
+  assert.equal(panel.querySelector('button'), button);
+  assert.equal(button.textContent, 'loading_video_links');
+  resolvers[0]({ videos: [video('one')] });
+  await app.flush();
+  assert.equal(panel.querySelector('button'), button);
+
+  resolvers[1]({ videos: [video('one')] });
+  await app.flush();
+  assert.equal(block.nextElementSibling, panel);
+  assert.equal(panel.querySelectorAll('a').length, 7);
+  assert.equal(document.activeElement, panel.querySelector('summary'));
+});
+
+test('a response without a matching video ends loading and allows another request', async (t) => {
+  const app = setup(async () => ({ videos: [] }));
+  t.after(app.close);
+  const { host } = app.addPlayer('one');
+  app.start();
+  await app.approve();
+  const button = host.querySelector('.more-boosty-request > button');
+  assert.equal(button.textContent, 'video_links_unavailable');
+  assert.equal(button.hasAttribute('aria-disabled'), false);
+  button.click();
+  await app.flush();
+  assert.equal(app.calls.length, 2);
+});
+
+test('a preview-only post can show links before its player mounts', async (t) => {
+  const app = setup(async () => ({ videos: [video('one')] }));
+  t.after(app.close);
+  const { document } = app.window;
+  app.start();
+  await app.flush();
+  app.window.history.pushState({}, '', '/author/posts/from-feed');
+  const preview = document.createElement('div');
+  preview.className = 'VideoBlock-scss--module_root_preview';
+  document.querySelector('#root').append(preview);
+  await app.flush();
+  await app.advance(240);
+  assert.ok(preview.nextElementSibling?.querySelector('button'));
+  assert.equal(app.calls.length, 0);
+  await app.approve();
+  assert.equal(app.calls[0].metadata.id, 'from-feed');
+  assert.equal(preview.nextElementSibling.querySelectorAll('.more-boosty-downloads a').length, 7);
 });

@@ -48,7 +48,13 @@ for (const path of Object.keys(files).filter((path) => /^_locales\/[^/]+\/messag
   localeKeys = keys;
   for (const entry of Object.values(messages)) assert.ok(typeof entry.message === 'string' && entry.message.length > 0);
   assert.ok(messages.description.message.length <= 132, 'Description exceeds 132 characters');
-  for (const key of ['privacy_notice', 'download_rights', 'load_video_links']) assert.ok(messages[key]);
+  for (const key of [
+    'extension_notice_title', 'privacy_notice', 'load_video_links', 'loading_video_links',
+    'retry_video_links', 'video_links_unavailable', 'video_quality', 'download_video',
+    'download_preview', 'download_quality',
+  ]) {
+    assert.ok(messages[key], path + ' is missing ' + key);
+  }
   const locale = path.split('/')[1];
   const listing = JSON.parse(await readFile(new URL('../store/' + locale + '/listing.json', import.meta.url), 'utf8'));
   if (listingKeys) assert.deepEqual(Object.keys(listing).sort(), listingKeys, 'Store locale fields must match');

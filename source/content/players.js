@@ -1,17 +1,40 @@
 import { parseVideoId, postMetadata } from '../global/helpers.js';
 
-export const getContentMetadata = (player, location) => {
-  // A media overlay may cover another post page: prefer the player's own link.
-  const post = player.closest('div[class*="Post_root_"]');
-  const media = player.closest('div[class*="MediaViewer_root_"]');
-  const link = media?.querySelector('a[class*="GoToPostButton_link_"]')
-    ?? post?.querySelector('a[class*="CreatedAt_headerLink_"]');
-  if (link) return postMetadata(link.href);
+const postSelector = '[class*="Post_root_"], [class*="Post-scss--module_root_"]';
+const mediaSelector = '[class*="MediaViewer_root_"], [class*="MediaViewer-scss--module_root_"]';
+const postLinkSelector = 'a[class*="CreatedAt_headerLink_"], a[class*="CreatedAt-scss--module_headerLink_"]';
+const mediaLinkSelector = 'a[class*="GoToPostButton_link_"], a[class*="GoToPostButton-scss--module_link_"]';
 
+export const getContentMetadata = (player, location) => {
   const url = new URL(location.href);
+  const media = player.closest(mediaSelector);
+  if (media) {
+    const link = media.querySelector(mediaLinkSelector);
+    const metadata = link && postMetadata(link.href);
+    if (metadata) return metadata;
+  }
   if (url.pathname.startsWith('/app/messages') && url.searchParams.has('dialogId')) {
     return { type: 'dialog', id: url.searchParams.get('dialogId') };
   }
+
+  // A feed can contain several posts. Resolve the permalink from this card.
+  const post = player.closest(postSelector);
+  const link = post?.querySelector(postLinkSelector);
+  const metadata = link && postMetadata(link.href);
+  if (metadata) return metadata;
+
+  if (post && !media) {
+    const candidates = new Map();
+    for (const anchor of post.querySelectorAll('a[href*="/posts/"]')) {
+      if (anchor.closest(postSelector) !== post) continue;
+      const candidate = postMetadata(anchor.href);
+      if (candidate) candidates.set(JSON.stringify(candidate), candidate);
+    }
+    if (candidates.size === 1) return candidates.values().next().value;
+  }
+
+  const mediaPath = url.pathname.match(/^(\/[^/]+\/posts\/[^/]+)\/media\/[^/]+\/?$/);
+  if (mediaPath) return postMetadata(new URL(mediaPath[1], url.origin).href);
   return postMetadata(url.href);
 };
 
@@ -33,9 +56,19 @@ export const getAccessToken = (storage) => {
   }
 };
 
-export const getControlsHost = (player) => {
+export const mountControls = (player, controls) => {
+  // The player is absolutely positioned inside a padding-based aspect-ratio box.
+  // Controls must be a sibling of that box so their height moves the post text.
+  let playerWrapper;
   for (let node = player.parentElement; node; node = node.parentElement) {
-    if (Array.from(node.classList).some((name) => name.startsWith('VideoPlayer-'))) return node;
+    if (Array.from(node.classList).some((name) => name.startsWith('VideoPlayerContainer-'))) {
+      if (node.nextElementSibling !== controls) node.after(controls);
+      return;
+    }
+    if (!playerWrapper && Array.from(node.classList).some((name) => name.startsWith('VideoPlayer-'))) {
+      playerWrapper = node;
+    }
   }
-  return player.parentElement;
+  const anchor = playerWrapper ?? player;
+  if (anchor.nextElementSibling !== controls) anchor.after(controls);
 };

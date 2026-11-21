@@ -12,9 +12,29 @@
     "message": "Show video links"
   },
   "privacy_notice": {
-    "message": "More Boosty will read your Boosty session token and send it only to the Boosty API for this post or dialog. The response may include post text or up to 300 recent dialog messages; only video links are cached temporarily in memory. No data is sent to the developer. Opening a link connects your browser to the media host supplied by Boosty."
+    "message": "When you click, More Boosty sends your session token only to the Boosty API to retrieve video links."
   },
-  "download_rights": {
-    "message": "Save only your own content or videos you have permission to download. Viewing access alone is not permission to download."
+  "extension_notice_title": {
+    "message": "More Boosty · third-party extension"
+  },
+  "video_quality": {
+    "message": "Choose quality"
+  },
+  "download_quality": {
+    "message": "Download $QUALITY$",
+    "placeholders": {
+      "quality": {
+        "content": "$1"
+      }
+    }
+  },
+  "loading_video_links": {
+    "message": "Loading links…"
+  },
+  "retry_video_links": {
+    "message": "Retry loading links"
+  },
+  "video_links_unavailable": {
+    "message": "No links · try again"
   }
 }
